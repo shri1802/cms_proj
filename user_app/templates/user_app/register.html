@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Register</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="{% static 'fonts/fontawesome-all.min.css' %}">
+</head>
+
+<body class="bg-gradient-success">
+    <div class="container">
+        <div class="card shadow-lg o-hidden border-0 my-5">
+            <div class="card-body p-0">
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-flex">
+                        <div class="flex-grow-1 bg-register-image" style="background-image: url({% static 'img/dogs/image2.jpg' %});"></div>
+
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h4 class="text-dark mb-4">Create an Account!</h4>
+                            </div>
+                            <form class="user" method="post" id="form-input" action="{% url 'register' %}" onsubmit="return validateForm()">
+                                {% csrf_token %}
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user"
+                                            type="text" id="first_name" placeholder="First Name" name="first_name">
+                                    </div>
+                                    <div class="col-sm-6"><input class="form-control form-control-user" type="text"
+                                            id="last_name" placeholder="Last Name" name="last_name"></div>
+                                </div>
+                                <div class="mb-3"><input class="form-control form-control-user" type="text"
+                                        id="username" placeholder="User Name" name="username"></div>
+
+                                <div class="mb-3"><input class="form-control form-control-user" type="email" id="email"
+                                        placeholder="Email Address" name="email"></div>
+                                <div class="row mb-3">
+                                    <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user"
+                                            type="password" id="password" placeholder="Password"
+                                            name="password"></div>
+                                    <div class="col-sm-6"><input class="form-control form-control-user" type="password"
+                                            id="password_repeat" placeholder="Repeat Password"
+                                            name="password_repeat"></div>
+                                </div>
+                                <div class="row mb-3">
+                                    <button id="register_button" class="btn btn-danger d-block btn-user col-sm-6 mb-sm-0" type="submit">Register Account</button>
+
+                                    <!-- Error Message -->
+                                    <div id="error_message" class="alert alert-danger mt-3 d-none" role="alert">
+                                        <!-- Error messages will be shown here -->
+                                    </div>
+                                    {% if error %}
+                                    <div class="alert alert-danger mt-3" role="alert">
+                                        {{ error }}
+                                    </div>
+                                    {% endif %}
+                                
+                                <hr>
+                            </form>
+                            {% csrf_token %}
+                            <form >
+                            <button class="btn btn-warning d-block btn-user col-sm-6" type="submit" onclick="clearForm()">Clear Form</button>
+                        </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function clearForm() {
+            // Get all form elements
+            var formElements = document.getElementById("form-input").elements;
+    
+            // Loop through each form element
+            for (var i = 0; i < formElements.length; i++) {
+                var element = formElements[i];
+    
+                // Check if the element is an input, textarea, or select element
+                if (element.tagName === "INPUT" || element.tagName === "TEXTAREA" || element.tagName === "SELECT") {
+                    // Clear the value of the element
+                    element.value = "";
+                }
+            }
+        }
+    
+        function validateForm() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var passwordRepeat = document.getElementById("password_repeat").value;
+            var errorMessage = "";
+    
+            // Reset error message and button state
+            document.getElementById("error_message").classList.add("d-none");
+            document.getElementById("register_button").disabled = false;
+    
+            // Check username format
+            if (/^\d+$/.test(username)) {
+                errorMessage += "Username should not be all numbers.\n";
+            }
+    
+            // Check password length and format
+            if (password.length < 8) {
+                errorMessage += "Password should be at least 8 characters long.\n";
+            }
+            if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                errorMessage += "Password should contain at least one special character.\n";
+            }
+    
+            // Check if password matches repeat password
+            if (password !== passwordRepeat) {
+                errorMessage += "Passwords do not match.\n";
+            }
+    
+            // Display error message and disable button if there's an error
+            if (errorMessage !== "") {
+                document.getElementById("error_message").textContent = errorMessage;
+                document.getElementById("error_message").classList.remove("d-none");
+                document.getElementById("register_button").disabled = true;
+                return false; // Return false to indicate validation failed
+            }
+    
+            // If all validation passes, submit the form
+            return true;
+        }
+    </script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bs-init.js' %}"></script>
+    <script src="{% static 'js/theme.js' %}"></script>
+</body>
+</html>

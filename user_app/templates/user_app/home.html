@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <!-- Bootstrap CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="{% static 'fonts/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body class="bg-gradient-success">
+    <div class="container">
+        <div class="card shadow-lg o-hidden border-0 my-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="text-center mb-4">
+                        <h1>Welcome to CMS</h1>
+                    </div>
+                    <div class="text-center">
+                        <!-- Login button -->
+                        <a href="{% url 'signin' %}" class="btn btn-danger mr-3">Login</a>
+                        <!-- Register button -->
+                        <a href="{% url 'register' %}" class="btn btn-success">Register</a>
+                        <br>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,161 @@
+{% load crispy_forms_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Detail</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="{% static 'fonts/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+
+                                                                                <!-- SIDE NAVBAR -->
+
+
+        <nav class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-success p-0 navbar-dark">
+            <div class="container-fluid d-flex flex-column p-0"><a
+                    class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-icon rotate-n-15"><i class="fa-solid fa-users"></i></div>
+                    <div class="sidebar-brand-text mx-3"><span>CMS</span></div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'main' %}"><i
+                                class="fas fa-user"></i><span>Dashboard</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'read_policy' %}"><i
+                                class="fas fa-table"></i><span>Policy</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'read_claim' %}"><i
+                                class="fas fa-table"></i><span>Claim</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'signout' %}"><i
+                                class="fas fa-user-circle"></i><span>Logout</span></a></li>
+                </ul>
+                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
+                        id="sidebarToggle" type="button"></button></div>
+            </div>
+        </nav>
+
+                                                                               <!-- SIDE NAVBAR END-->
+
+
+
+
+
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+
+                                                                               <!-- FIRST NAME USER -->
+     
+
+                <nav class="navbar navbar-expand bg-white shadow mb-4 topbar static-top navbar-light">
+                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3"
+                            id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+                        <ul class="navbar-nav flex-nowrap ms-auto">
+
+                            <div class="d-none d-sm-block topbar-divider"></div>
+                            <li class="nav-item dropdown no-arrow">
+                                {% if user %}
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                        aria-expanded="false" data-bs-toggle="dropdown" href="#"><span
+                                            class="d-none d-lg-inline me-2 text-gray-600 small">{{user}}</span></a>
+                                </div>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                                                                               <!-- FIRST NAME USER END-->
+
+
+                                                                               <!-- TABLE RENDERING -->
+
+
+
+
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Policies</h3>
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <div class="table-responsive table mt-2" id="dataTable" role="grid"
+                                aria-describedby="dataTable_info">
+                                {% if policies %}
+                                <table class="table my-0" id="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Policy Number</th>
+                                            <th>Type</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Lumpsum</th>
+                                            <th>Premium</th>
+                                            <th>Verified</th>
+                                            {% if is_admin %}
+                                            <th>Actions</th>
+                                            {% endif %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for policy in policies %}
+                                        <tr>
+                                            <td>{{ policy.policy_number }}</td>
+                                            <td>{{ policy.type }}</td>
+                                            <td>{{ policy.start_date }}</td>
+                                            <td>{{ policy.end_date }}</td>
+                                            <td>{{ policy.lumpsum }}</td>
+                                            <td>{{ policy.premium }}</td>
+                                            <td>
+                                                {% if policy.is_verified %}
+                                                <i class="fas fa-check text-success fa-fw"></i> <!-- Green check mark icon -->
+                                                {% else %}
+                                                <i class="fas fa-times text-danger fa-fw"></i> <!-- Red cancel icon -->
+                                                {% endif %}
+                                            </td>
+                                            {% if is_admin %}
+                                            <td>
+                                                <form method="POST" action="{% url 'read_policy' %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="policy_number" value="{{ policy.policy_number }}">
+                                                    <button type="submit" class="btn btn-success btn-sm" name="action" value="verify">Verify</button>
+                                                    <button type="submit" class="btn btn-warning btn-sm" name="action" value="edit">Edit</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm" name="action" value="delete">Delete</button>
+                                                </form>
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                    <p>No policies found.</p>
+                                {% endif %}
+                            </div>
+                            <a class="btn btn-danger btn-sm" href="{% url 'create_policy' %}">Add</a>
+
+                        </div>
+                    </div>
+                </div>
+
+                                                                               <!--END  TABLE RENDERING -->
+
+
+            </div>
+        </div>
+    </div>
+
+
+</body>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bs-init.js' %}"></script>
+<script src="{% static 'js/theme.js' %}"></script>
+
+</html>
