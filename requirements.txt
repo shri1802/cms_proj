@@ -7,10 +7,13 @@ django-extensions==3.2.3
 django-sslserver==0.22
 djangorestframework==3.14.0
 MarkupSafe==2.1.4
+psycopg2==2.9.9
 pycparser==2.21
 pyOpenSSL==23.3.0
+python-dotenv==1.0.1
 pytz==2023.3.post1
 sqlparse==0.4.4
 typing_extensions==4.9.0
 tzdata==2023.4
 Werkzeug==3.0.1
+whitenoise==6.6.0
