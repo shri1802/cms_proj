@@ -78,39 +78,56 @@ def main(request):
         'total_life': total_life,
         'total_auto': total_auto
     })
+    
 
 @login_required
 def create_policy(request):
-    edit_mode = False
-    if request.method == 'POST':
-        policy_number = request.POST.get('policy_number')
-        if policy_number:
-            # If policy_number is present in POST data, it means the admin is editing an existing policy
-            policy = get_object_or_404(Policy, policy_number=policy_number)
-            form = PolicyForm(request.POST, instance=policy)
-            edit_mode = True
-        else:
-            # Otherwise, it's a new policy creation
-            form = PolicyForm(request.POST)
-        if form.is_valid():
-            policy = form.save(commit=False)
-            policy.user = request.user
-            policy.save()
-            return redirect('read_policy')
-    else:
-        # Check if policy_number is passed in GET parameters (for editing)
-        policy_number = request.GET.get('policy_number')
-        if policy_number:
-            # If policy_number is present in GET parameters, it means the admin wants to edit this policy
-            policy = get_object_or_404(Policy, policy_number=policy_number)
-            form = PolicyForm(instance=policy)
-            edit_mode = True
-        else:
-            form = PolicyForm()
-
     fnuser = request.user.first_name
+    # By default, assume edit mode is False
+    edit_mode = False
+    
+    if request.user.is_staff:
+        print("staff if")
+        # Admin users will see the full form with the option to edit existing policies
+        if request.method == 'POST':
+            print("admin post if")
+            policy_number = request.POST.get('policy_number')
+            if policy_number:
+                policy = get_object_or_404(Policy, policy_number=policy_number)
+                form = PolicyForm(request.POST, instance=policy)
+                edit_mode = True
+            else:
+                form = PolicyForm(request.POST)
+                if form.is_valid():
+                    policy = form.save(commit=False)
+                    policy.user = request.user
+                    policy.save()
+                    return redirect('read_policy')
+        else:
+            policy_number = request.GET.get('policy_number')
+            if policy_number:
+                policy = get_object_or_404(Policy, policy_number=policy_number)
+                form = PolicyForm(instance=policy)
+                edit_mode = True
+            else:
+                form = PolicyForm()
+    else:
+        print("user else")
+        # Normal users will see a simplified form without a policy number field
+        if request.method == 'POST':
+            print("post if")
+            form = PolicyForm(request.POST)
+            if form.is_valid():
+                policy = form.save(commit=False)
+                policy.user = request.user
+                policy.save()
+                return redirect('read_policy')
+        else:
+            print("policyform else")
+            form = PolicyForm()
+            print(form)
 
-    return render(request, 'user_app/create_policy.html', {'form': form, 'user': fnuser, 'edit_mode': edit_mode})
+    return render(request, 'user_app/create_policy.html', {'form': form, 'edit_mode': edit_mode,'user':fnuser})
 
 
 @login_required

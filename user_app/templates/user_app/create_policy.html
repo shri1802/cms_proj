@@ -98,13 +98,19 @@
                             </div>
                             <form method="POST" action="{% url 'create_policy' %}">
                                 {% csrf_token %}
-                                <!-- Policy Number Field - Locked for editing -->
+                                <!-- Policy Number Field - Locked for editing, only shown in edit mode -->
+                                {% if edit_mode %}
                                 <div class="form-group">
-                                    <input class="form-control form-control-user" type="text" id="policy_number" placeholder="Policy Number" name="policy_number" {% if edit_mode %}value="{{ form.instance.policy_number }}" readonly{% endif %}>
+                                    <input class="form-control form-control-user" type="text" id="policy_number" placeholder="Policy Number" name="policy_number" value="{{ form.instance.policy_number }}" readonly>
                                 </div>
+                                {% endif %}
                                 <!-- Type Field - Locked for editing -->
                                 <div class="form-group">
-                                    <input class="form-control form-control-user" type="text" id="type" placeholder="Policy Type" name="type" {% if edit_mode %}value="{{ form.instance.type }}" readonly{% endif %}>
+                                    <select class="form-control form-control-user" id="type" name="type" {% if edit_mode %}disabled{% endif %}>
+                                        {% for choice in form.fields.type.choices %}
+                                        <option value="{{ choice.0 }}" {% if form.instance.type == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                                 <!-- Start Date Field -->
                                 <div class="form-group">    
@@ -129,6 +135,8 @@
                         </div>
                     </div>
                 </div>
+                
+                
                 
             </div>
         </div>
