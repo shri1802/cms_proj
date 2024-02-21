@@ -1,13 +1,25 @@
 version: '3.8'
 services:
  app:
-  build: .
-  volumes:
-   - .:/django
-  ports:
-   - 8000:8000
-  image: app:django
-  container_name: cms_container
-  command: python manage.py runserver 0.0.0.0:8000
-  # db:
+    build: .
+    volumes:
+      - .:/django
+    ports:
+      - 8000:8000
+    image: app:django
+    container_name: cms_container
+    command: ["sh", "./start.sh"]
+    depends_on:
+      - postgres_db
+
+ postgres_db:
+    image: postgres
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+
   
