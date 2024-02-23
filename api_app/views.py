@@ -107,7 +107,11 @@ def admin_claim_update(request, claim_id):
 @api_view(['DELETE'])
 @permission_classes([IsAdminUser])
 def admin_claim_delete(request, claim_id):
-    claim = get_object_or_404(Claim, claim_id=claim_id)
+    try:
+        claim = Claim.objects.get(claim_id=claim_id)
+    except Claim.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
     claim.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_202_ACCEPTED)
 
