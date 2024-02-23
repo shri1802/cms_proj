@@ -9,8 +9,11 @@ services:
     image: app:django
     container_name: cms_container
     command: ["sh", "./start.sh"]
+<<<<<<< HEAD
     env_file:
       - .env
+=======
+>>>>>>> a4605adc0ff48c1d9e92f5ebbc4bc0ccb195bcf6
     depends_on:
       - postgres_db
 
@@ -18,10 +21,13 @@ services:
     image: postgres
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
+<<<<<<< HEAD
     environment:
       - POSTGRES_DB=${SQL_NAME}
       - POSTGRES_USER=${SQL_USER}
       - POSTGRES_PASSWORD=${SQL_PASSWORD}
+=======
+>>>>>>> a4605adc0ff48c1d9e92f5ebbc4bc0ccb195bcf6
     ports:
       - "5432:5432"
 
